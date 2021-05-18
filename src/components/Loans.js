@@ -158,7 +158,7 @@ export default function Loans({ type = "info" }) {
               <input
                 type="submit"
                 className="btn btn-primary mt-2"
-                disabled={status === STATUS.SUBMITTING}
+                disabled={status === STATUS.SUBMITTING || !amount}
                 value={actionButton}
               />
             </div>
@@ -181,7 +181,7 @@ export default function Loans({ type = "info" }) {
           <p>{rejectedMessage_100}</p>
         ))}
       {type === "info" && (
-        <h4 className="mt-4">Current debt: {loans[email] || 0}</h4>
+        <h4 className="mt-4">Current debt: ${loans[email] || 0}</h4>
       )}
     </div>
   );
