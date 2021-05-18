@@ -5,6 +5,8 @@ import MainPage from "./MainPage";
 import PageNotFound from "./PageNotFound";
 import LoansPage from "./LoansPage";
 import LoanProvider from "../contexts/loanContext";
+import PaymentsPage from "./PaymentsPage";
+import InfoPage from "./InfoPage";
 
 export default function App() {
   return (
@@ -14,6 +16,8 @@ export default function App() {
         <Switch>
           <Route exact path="/" component={MainPage} />
           <Route path="/loans" component={LoansPage} />
+          <Route path="/payments" component={PaymentsPage} />
+          <Route path="/info" component={InfoPage} />
           <Route component={PageNotFound} />
         </Switch>
       </LoanProvider>

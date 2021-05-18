@@ -11,6 +11,13 @@ export default function loanReducer(loans = {}, action) {
       }
     case "loadLoans":
       return action.allLoans;
+    case "makePayment":
+      if (loans[action.email])
+        return {
+          ...loans,
+          [action.email]: loans[action.email] - action.amount,
+        };
+      return loans;
     default:
       throw new Error("Unhandled action" + action.type);
   }

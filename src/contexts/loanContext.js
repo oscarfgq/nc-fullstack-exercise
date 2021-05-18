@@ -1,5 +1,5 @@
 import React, { createContext, useState, useReducer } from "react";
-import { checkAmount, getAll } from "../api/loanApi";
+import { checkAmount, payAmount, getAll } from "../api/loanApi";
 import loanReducer from "../reducers/loanReducer";
 
 export const LoanContext = createContext();
@@ -32,11 +32,28 @@ export default function LoanProvider({ children }) {
     }
   }
 
+  async function makePayment(email, amount) {
+    try {
+      const result = await payAmount(email, amount);
+      console.log("This is the response from API: " + result);
+      console.log(result);
+      if (result.error) {
+        return result;
+      } else {
+        dispatch({ type: "makePayment", email, amount: parseInt(amount) });
+        return { email: result };
+      }
+    } catch (e) {
+      setError(e);
+    }
+  }
+
   const provider = {
     loans,
     error,
     makeLoan,
     fetchLoans,
+    makePayment,
   };
 
   return (

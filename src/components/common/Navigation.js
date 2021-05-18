@@ -12,6 +12,14 @@ export default function Navigation() {
       <NavLink to="/loans" activeStyle={activeStyle}>
         Loans
       </NavLink>
+      {" | "}
+      <NavLink to="/payments" activeStyle={activeStyle}>
+        Payments
+      </NavLink>
+      {" | "}
+      <NavLink to="/info" activeStyle={activeStyle}>
+        Info
+      </NavLink>
     </nav>
   );
 }

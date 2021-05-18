@@ -11,18 +11,47 @@ export const STATUS = {
   REJECTED: "REJECTED",
 };
 
-export default function Loans({ type }) {
+export default function Loans({ type = "info" }) {
   const [amount, setAmount] = useState("");
   const [status, setStatus] = useState(STATUS.IDLE);
   const { email, setEmail, emailValid } = useEmailValidation();
   const [touched, setTouched] = useState({});
-  const { loans, error, makeLoan, fetchLoans } = useLoanState();
+  const { loans, fetchLoans, makeLoan, makePayment, error } = useLoanState();
 
-  const title = `Request a Loan`;
-  const actionButton = `Request Loan`;
-  const completedMessage = `We can accept the loan`;
-  const rejectedMessage_100 = `We cannot accept the loan.`;
-  const rejectedMessage_101 = `We cannot accept the loan. First loan is maximum 50$.`;
+  const title =
+    type === "loan"
+      ? `Request a Loan`
+      : type === "payment"
+      ? `Make a Payment`
+      : `Check Status`;
+
+  const actionButton =
+    type === "loan"
+      ? "Request Loan"
+      : type === "payment"
+      ? `Make Payment`
+      : `Check`;
+
+  const completedMessage =
+    type === "loan"
+      ? `We can accept the loan. Total balance: $${loans[email]}`
+      : type === "payment"
+      ? `Payment accepted`
+      : `Current debt: $${loans[email] || 0}`;
+
+  const rejectedMessage_100 =
+    type === "loan"
+      ? `We cannot accept the loan.`
+      : type === "payment"
+      ? `We cannot accept the payment. Amount exceeds debt.`
+      : `Current debt: $${loans[email] || 0}`;
+
+  const rejectedMessage_101 =
+    type === "loan"
+      ? `We cannot accept the loan. First loan is maximum 50$.`
+      : type === "payment"
+      ? `We cannot accept the payment. No debt.`
+      : `Current debt: $${loans[email] || 0}`;
 
   const validationErrors = getErrors();
   const formIsValid = Object.keys(validationErrors).length === 0;
@@ -44,7 +73,17 @@ export default function Loans({ type }) {
     e.preventDefault();
     setStatus(STATUS.SUBMITTING);
     if (formIsValid) {
-      const result = await makeLoan(email, amount);
+      let result;
+      switch (type) {
+        case "loan":
+          result = await makeLoan(email, amount);
+          break;
+        case "payment":
+          result = await makePayment(email, amount);
+          break;
+        default:
+        // do nothing
+      }
       if (result.error) setStatus(STATUS.REJECTED);
       else setStatus(STATUS.COMPLETED);
     } else setStatus(STATUS.TO_BE_FIXED);
@@ -94,31 +133,37 @@ export default function Loans({ type }) {
             {touched.email && STATUS.TO_BE_FIXED && validationErrors.email}
           </span>
         </div>
-        <div>
-          <label className="me-1" htmlFor="amount">
-            Amount:
-          </label>
-          <input
-            id="amount"
-            type="text"
-            value={amount}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            className="me-2 mt-2"
-            disabled={!email}
-          />
-          <span role="alert">
-            {touched.amount && STATUS.TO_BE_FIXED && validationErrors.amount}
-          </span>
-        </div>
-        <div>
-          <input
-            type="submit"
-            className="btn btn-primary mt-2"
-            disabled={status === STATUS.SUBMITTING}
-            value={actionButton}
-          />
-        </div>
+        {type !== "info" && (
+          <>
+            <div>
+              <label className="me-1" htmlFor="amount">
+                Amount:
+              </label>
+              <input
+                id="amount"
+                type="text"
+                value={amount}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                className="me-2 mt-2"
+                disabled={!email}
+              />
+              <span role="alert">
+                {touched.amount &&
+                  STATUS.TO_BE_FIXED &&
+                  validationErrors.amount}
+              </span>
+            </div>
+            <div>
+              <input
+                type="submit"
+                className="btn btn-primary mt-2"
+                disabled={status === STATUS.SUBMITTING}
+                value={actionButton}
+              />
+            </div>
+          </>
+        )}
       </form>
       {!formIsValid && status === STATUS.TO_BE_FIXED && (
         <div role="alert">
@@ -135,7 +180,9 @@ export default function Loans({ type }) {
         ) : (
           <p>{rejectedMessage_100}</p>
         ))}
-      <h4 className="mt-4">Current debt: {loans[email] || 0}</h4>
+      {type === "info" && (
+        <h4 className="mt-4">Current debt: {loans[email] || 0}</h4>
+      )}
     </div>
   );
 }

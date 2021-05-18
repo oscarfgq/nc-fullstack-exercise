@@ -32,9 +32,28 @@ module.exports = (persistence = {}) => {
     return await new Promise((resolve) => resolve(persistence));
   };
 
+  const payByEmail = async (email, amount) =>
+    new Promise((resolve) => {
+      if (!persistence[email]) {
+        const error = new Error("No Debt");
+        error.code = 101;
+        throw error;
+      } else {
+        if (amount > persistence[email]) {
+          const error = new Error("Amount exceeds debt");
+          error.code = 100;
+          throw error;
+        } else {
+          persistence[email] = persistence[email] - amount;
+          resolve(persistence[email]);
+        }
+      }
+    });
+
   return {
     findByEmail,
     setByEmail,
     getAll,
+    payByEmail,
   };
 };

@@ -32,3 +32,33 @@ app.get("/loan", async (req, res) => {
     console.error(e);
   }
 });
+
+app.post("/payments", async (req, res) => {
+  let email = req.body.email;
+  let amount = req.body.amount;
+  try {
+    const dbResponse = await dbServices.payByEmail(email, parseInt(amount));
+    res.status(200).json(dbResponse);
+  } catch ({ code }) {
+    res.status(200).json({ error: code });
+  }
+});
+
+app.post("/information", async (req, res) => {
+  let email = req.body.email;
+  try {
+    const dbResponse = await dbServices.findByEmail(email);
+    res.status(200).json(dbResponse);
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+app.get("/loan", async (req, res) => {
+  try {
+    const dbResponse = await dbServices.getAll();
+    res.status(200).json(dbResponse);
+  } catch (e) {
+    console.error(e);
+  }
+});
