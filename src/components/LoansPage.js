@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import useEmailValidation from "../hooks/useEmailValidation";
 import { Link } from "react-router-dom";
+import { checkAmount } from "../api/loanApi";
 
 export const STATUS = {
   IDLE: "IDLE",
   SUBMITTING: "SUBMITTING",
   TO_BE_FIXED: "TO_BE_FIXED",
   COMPLETED: "COMPLETED",
+  REJECTED: "REJECTED",
 };
 
 export default function LoansPage() {
@@ -14,6 +16,7 @@ export default function LoansPage() {
   const [status, setStatus] = useState(STATUS.IDLE);
   const { email, setEmail, emailValid } = useEmailValidation();
   const [touched, setTouched] = useState({});
+  const [error, setError] = useState(null);
 
   const title = `Request a Loan`;
   const actionButton = `Request Loan`;
@@ -34,8 +37,18 @@ export default function LoansPage() {
     e.preventDefault();
     setStatus(STATUS.SUBMITTING);
     if (formIsValid) {
-      // Process loan
-      // setStatus(STATUS.COMPLETED);
+      try {
+        const result = await checkAmount(email, amount);
+        if (result.error) {
+          setStatus(STATUS.REJECTED);
+          return result;
+        } else {
+          setStatus(STATUS.COMPLETED);
+          return { email: result };
+        }
+      } catch (e) {
+        setError(e);
+      }
     } else setStatus(STATUS.TO_BE_FIXED);
   };
 
@@ -52,6 +65,7 @@ export default function LoansPage() {
     return errors;
   }
 
+  if (error) throw error;
   if (status === STATUS.COMPLETED)
     return (
       <>

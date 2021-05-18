@@ -12,3 +12,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const dbServices = services();
+
+app.post("/loan", async (req, res) => {
+  let email = req.body.email;
+  let amount = req.body.amount;
+  try {
+    const dbResponse = await dbServices.setByEmail(email, parseInt(amount));
+    res.status(200).json(dbResponse);
+  } catch ({ code }) {
+    res.status(200).json({ error: code });
+  }
+});
