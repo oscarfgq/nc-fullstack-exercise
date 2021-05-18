@@ -23,3 +23,12 @@ app.post("/loan", async (req, res) => {
     res.status(200).json({ error: code });
   }
 });
+
+app.get("/loan", async (req, res) => {
+  try {
+    const dbResponse = await dbServices.getAll();
+    res.status(200).json(dbResponse);
+  } catch (e) {
+    console.error(e);
+  }
+});

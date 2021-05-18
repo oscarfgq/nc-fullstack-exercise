@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useEmailValidation from "../hooks/useEmailValidation";
 import { Link } from "react-router-dom";
-import { checkAmount } from "../api/loanApi";
+import useLoanState from "../hooks/useLoanState";
 
 export const STATUS = {
   IDLE: "IDLE",
@@ -16,14 +16,21 @@ export default function LoansPage() {
   const [status, setStatus] = useState(STATUS.IDLE);
   const { email, setEmail, emailValid } = useEmailValidation();
   const [touched, setTouched] = useState({});
-  const [error, setError] = useState(null);
+  const { loans, error, makeLoan, fetchLoans } = useLoanState();
 
   const title = `Request a Loan`;
   const actionButton = `Request Loan`;
   const completedMessage = `We can accept the loan`;
+  const rejectedMessage_100 = `We cannot accept the loan.`;
+  const rejectedMessage_101 = `We cannot accept the loan. First loan is maximum 50$.`;
 
   const validationErrors = getErrors();
   const formIsValid = Object.keys(validationErrors).length === 0;
+
+  useEffect(() => {
+    if (Object.keys(loans).length === 0) fetchLoans();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (e) => {
     if (e.target.id === "email") setEmail(e.target.value);
@@ -37,18 +44,9 @@ export default function LoansPage() {
     e.preventDefault();
     setStatus(STATUS.SUBMITTING);
     if (formIsValid) {
-      try {
-        const result = await checkAmount(email, amount);
-        if (result.error) {
-          setStatus(STATUS.REJECTED);
-          return result;
-        } else {
-          setStatus(STATUS.COMPLETED);
-          return { email: result };
-        }
-      } catch (e) {
-        setError(e);
-      }
+      const result = await makeLoan(email, amount);
+      if (result.error) setStatus(STATUS.REJECTED);
+      else setStatus(STATUS.COMPLETED);
     } else setStatus(STATUS.TO_BE_FIXED);
   };
 
@@ -117,6 +115,7 @@ export default function LoansPage() {
           <input
             type="submit"
             className="btn btn-primary mt-2"
+            disabled={status === STATUS.SUBMITTING}
             value={actionButton}
           />
         </div>
@@ -130,6 +129,13 @@ export default function LoansPage() {
           </ul>
         </div>
       )}
+      {status === STATUS.REJECTED &&
+        (!loans[email] ? (
+          <p>{rejectedMessage_101}</p>
+        ) : (
+          <p>{rejectedMessage_100}</p>
+        ))}
+      <h4 className="mt-4">Current debt: {loans[email] || 0}</h4>
     </div>
   );
 }

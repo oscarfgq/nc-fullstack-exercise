@@ -10,3 +10,9 @@ export async function checkAmount(email, amount) {
     .then(handleResponse)
     .catch(handleError);
 }
+
+export async function getAll() {
+  return fetch(baseUrl + "/loan")
+    .then(handleResponse)
+    .catch(handleError);
+}

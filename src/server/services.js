@@ -28,8 +28,13 @@ module.exports = (persistence = {}) => {
       }
     });
 
+  const getAll = async () => {
+    return await new Promise((resolve) => resolve(persistence));
+  };
+
   return {
     findByEmail,
     setByEmail,
+    getAll,
   };
 };
