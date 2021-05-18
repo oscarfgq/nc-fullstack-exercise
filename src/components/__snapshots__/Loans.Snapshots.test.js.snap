@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hides submit button when type is 'info' 1`] = `
+<div
+  className="container"
+>
+  <h2>
+    Check Status
+  </h2>
+  <form
+    onSubmit={[Function]}
+  >
+    <div>
+      <label
+        className="me-1"
+        htmlFor="email"
+      >
+        Email:
+      </label>
+      <input
+        className="me-2 mt-2"
+        id="email"
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+      <span
+        role="alert"
+      />
+    </div>
+  </form>
+  <h4
+    className="mt-4"
+  >
+    Current debt: $
+    0
+  </h4>
+</div>
+`;
+
+exports[`sets submit button label to 'Make Payment' when type is 'payment' 1`] = `
+<div
+  className="container"
+>
+  <h2>
+    Make a Payment
+  </h2>
+  <form
+    onSubmit={[Function]}
+  >
+    <div>
+      <label
+        className="me-1"
+        htmlFor="email"
+      >
+        Email:
+      </label>
+      <input
+        className="me-2 mt-2"
+        id="email"
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+      <span
+        role="alert"
+      />
+    </div>
+    <div>
+      <label
+        className="me-1"
+        htmlFor="amount"
+      >
+        Amount:
+      </label>
+      <input
+        className="me-2 mt-2"
+        disabled={true}
+        id="amount"
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+      <span
+        role="alert"
+      />
+    </div>
+    <div>
+      <input
+        className="btn btn-primary mt-2"
+        disabled={true}
+        type="submit"
+        value="Make Payment"
+      />
+    </div>
+  </form>
+</div>
+`;
+
+exports[`sets submit button label to 'Request Loan' when type is 'loan' 1`] = `
+<div
+  className="container"
+>
+  <h2>
+    Request a Loan
+  </h2>
+  <form
+    onSubmit={[Function]}
+  >
+    <div>
+      <label
+        className="me-1"
+        htmlFor="email"
+      >
+        Email:
+      </label>
+      <input
+        className="me-2 mt-2"
+        id="email"
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+      <span
+        role="alert"
+      />
+    </div>
+    <div>
+      <label
+        className="me-1"
+        htmlFor="amount"
+      >
+        Amount:
+      </label>
+      <input
+        className="me-2 mt-2"
+        disabled={true}
+        id="amount"
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+      <span
+        role="alert"
+      />
+    </div>
+    <div>
+      <input
+        className="btn btn-primary mt-2"
+        disabled={true}
+        type="submit"
+        value="Request Loan"
+      />
+    </div>
+  </form>
+</div>
+`;

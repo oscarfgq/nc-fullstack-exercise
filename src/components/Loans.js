@@ -25,12 +25,7 @@ export default function Loans({ type = "info" }) {
       ? `Make a Payment`
       : `Check Status`;
 
-  const actionButton =
-    type === "loan"
-      ? "Request Loan"
-      : type === "payment"
-      ? `Make Payment`
-      : `Check`;
+  const actionButton = type === "loan" ? "Request Loan" : `Make Payment`;
 
   const completedMessage =
     type === "loan"
