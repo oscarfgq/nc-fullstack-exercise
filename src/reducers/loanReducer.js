@@ -1,6 +1,6 @@
 export default function loanReducer(loans = {}, action) {
   switch (action.type) {
-    case "makeLoan":
+    case "loan":
       if (!loans[action.email]) {
         return { ...loans, [action.email]: action.amount };
       } else {
@@ -9,9 +9,7 @@ export default function loanReducer(loans = {}, action) {
           [action.email]: loans[action.email] + action.amount,
         };
       }
-    case "loadLoans":
-      return action.allLoans;
-    case "makePayment":
+    case "payment":
       if (loans[action.email])
         return {
           ...loans,
@@ -19,6 +17,6 @@ export default function loanReducer(loans = {}, action) {
         };
       return loans;
     default:
-      throw new Error("Unhandled action" + action.type);
+      return loans;
   }
 }

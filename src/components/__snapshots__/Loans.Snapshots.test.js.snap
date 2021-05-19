@@ -5,7 +5,7 @@ exports[`hides submit button when type is 'info' 1`] = `
   className="container"
 >
   <h2>
-    Check Status
+    Check Debt
   </h2>
   <form
     onSubmit={[Function]}
@@ -29,13 +29,15 @@ exports[`hides submit button when type is 'info' 1`] = `
         role="alert"
       />
     </div>
+    <div>
+      <input
+        className="btn btn-primary mt-2"
+        disabled={false}
+        type="submit"
+        value="Check"
+      />
+    </div>
   </form>
-  <h4
-    className="mt-4"
-  >
-    Current debt: $
-    0
-  </h4>
 </div>
 `;
 
@@ -154,7 +156,7 @@ exports[`sets submit button label to 'Request Loan' when type is 'loan' 1`] = `
         className="btn btn-primary mt-2"
         disabled={true}
         type="submit"
-        value="Request Loan"
+        value="Request"
       />
     </div>
   </form>

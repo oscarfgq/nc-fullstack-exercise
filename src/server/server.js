@@ -14,51 +14,54 @@ app.use(express.json());
 const dbServices = services();
 
 app.post("/loan", async (req, res) => {
-  let email = req.body.email;
-  let amount = req.body.amount;
+  const email = req.body.email;
+  const amount = req.body.amount;
+  let response = { status: 200, statusText: "OK" };
   try {
     const dbResponse = await dbServices.setByEmail(email, parseInt(amount));
-    res.status(200).json(dbResponse);
-  } catch ({ code }) {
-    res.status(200).json({ error: code });
-  }
-});
-
-app.get("/loan", async (req, res) => {
-  try {
-    const dbResponse = await dbServices.getAll();
-    res.status(200).json(dbResponse);
+    if (dbResponse.error) {
+      response = {
+        ...response,
+        ...dbResponse,
+      };
+    }
+    res.status(200).json(response);
   } catch (e) {
-    console.error(e);
+    throw e;
   }
 });
 
 app.post("/payments", async (req, res) => {
-  let email = req.body.email;
-  let amount = req.body.amount;
+  const email = req.body.email;
+  const amount = req.body.amount;
+  let response = { status: 200, statusText: "OK" };
   try {
     const dbResponse = await dbServices.payByEmail(email, parseInt(amount));
-    res.status(200).json(dbResponse);
-  } catch ({ code }) {
-    res.status(200).json({ error: code });
+    if (dbResponse.error) {
+      response = {
+        ...response,
+        ...dbResponse,
+      };
+    }
+    res.status(200).json(response);
+  } catch (e) {
+    throw e;
   }
 });
 
 app.post("/information", async (req, res) => {
-  let email = req.body.email;
+  const email = req.body.email;
+  let response = { status: 200, statusText: "OK" };
   try {
     const dbResponse = await dbServices.findByEmail(email);
-    res.status(200).json(dbResponse);
+    if (dbResponse) {
+      response = {
+        ...response,
+        data: { amount: dbResponse },
+      };
+    }
+    res.status(200).json(response);
   } catch (e) {
-    console.error(e);
-  }
-});
-
-app.get("/loan", async (req, res) => {
-  try {
-    const dbResponse = await dbServices.getAll();
-    res.status(200).json(dbResponse);
-  } catch (e) {
-    console.error(e);
+    throw e;
   }
 });
